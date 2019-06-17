@@ -1,6 +1,6 @@
 package io.dy.controller;
 
-import com.alibaba.fastjson.JSON;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import io.dy.api.BitcoinRestApi;
@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/rest")
@@ -45,15 +47,15 @@ public class RestApiController {
     }
 
     @GetMapping("/headers/{count}/{blockhash}")
-    public JSONArray getBlockheaders(@PathVariable Integer count, @PathVariable String blockhash){
-        JSONArray blockheaders = bitcoinRestApi.getBlockheaders(count, blockhash);
+    public List<JSONObject> getBlockheaders(@PathVariable Integer count, @PathVariable String blockhash){
+        List<JSONObject> blockheaders = bitcoinRestApi.getBlockheaders(count, blockhash);
         return blockheaders;
     }
 
     @GetMapping("/blockhashbyheight/{height}")
     public String getblockhashbyheight(@PathVariable Integer height){
-        JSONObject getblockhashbyheight = bitcoinRestApi.getblockhashbyheight(height);
-        return getblockhashbyheight.toJSONString();
+        String getblockhashbyheight = bitcoinRestApi.getblockhashbyheight(height);
+        return getblockhashbyheight;
     }
 
     @GetMapping("/mempool/info")
@@ -66,6 +68,18 @@ public class RestApiController {
     public String getmempoolcontents(){
         JSONObject getmempoolcontents = bitcoinRestApi.getmempoolcontents();
         return getmempoolcontents.toJSONString();
+    }
+
+    @GetMapping("/getutxos/{txid}-{n}")
+    public String getUTXO(@PathVariable String txid,@PathVariable Integer n){
+        JSONObject utxo = bitcoinRestApi.getUTXO(txid, n);
+        return utxo.toJSONString();
+    }
+
+    @GetMapping("/getutxos/checkmempool/{txid}-{n}")
+    public String getUTXOCheckMempool(@PathVariable String txid,@PathVariable Integer n){
+        JSONObject utxoCheckMempool = bitcoinRestApi.getUTXOCheckMempool(txid, n);
+        return utxoCheckMempool.toJSONString();
     }
 
 

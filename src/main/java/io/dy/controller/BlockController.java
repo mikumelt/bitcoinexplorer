@@ -1,8 +1,11 @@
 package io.dy.controller;
 
+import com.alibaba.fastjson.JSONObject;
+import io.dy.api.BitcoinJsonRpcApi;
+import io.dy.api.BitcoinRestApi;
 import io.dy.dto.BlockGetDTO;
 import io.dy.dto.BlockListDTO;
-import io.dy.po.Block;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -13,29 +16,38 @@ import java.util.List;
 @RequestMapping("/block")
 public class BlockController {
 
+    @Autowired
+    private BitcoinRestApi bitcoinRestApi;
+    @Autowired
+    private BitcoinJsonRpcApi bitcoinJsonRpcApi;
+
     @GetMapping("/getRecentBlocks")
-    public List<BlockListDTO> getRecentBlocks(){
-        List<BlockListDTO> list = new ArrayList<>();
-
-        BlockListDTO blockListDTO = new BlockListDTO();
-        blockListDTO.setBlockhash("00000000000002160e501d80be1463a6210eccf8a400ebb55fb4cb4549947b48");
-        blockListDTO.setHeight(1543589);
-        blockListDTO.setTime(new Date());
-        blockListDTO.setTxsize(35);
-        blockListDTO.setChainwork("00000000000000000000000000000000000000000000011b0ce0c84102692201");
-        blockListDTO.setSize(12805);
-        list.add(blockListDTO);
+    public List<BlockListDTO> getRecentBlocks() throws Throwable {
 
 
-        BlockListDTO blockListDTO1 = new BlockListDTO();
-        blockListDTO1.setBlockhash("00000000000002940ade0c2b454b0c3b8b9606725c47ee6fffcdd68c5e9e435c");
-        blockListDTO1.setHeight(1543644);
-        blockListDTO1.setTime(new Date());
-        blockListDTO1.setTxsize(8);
-        blockListDTO1.setChainwork("00000000000000000000000000000000000000000000011b0ce0c84102692201");
-        blockListDTO1.setSize(2133);
-        list.add(blockListDTO1);
-        return list;
+        List<BlockListDTO> blockListDTOS = new ArrayList<>();
+        JSONObject blockChainInfo = bitcoinRestApi.getBlockChainInfo();
+        Integer blockHeight = blockChainInfo.getInteger("blocks");
+        Integer blockFromHeight = blockHeight - 5;
+
+        String blockhash = bitcoinJsonRpcApi.getBlockhashByHeight(blockFromHeight);
+
+        List<JSONObject> blockheaders = bitcoinRestApi.getBlockheaders(5, blockhash);
+
+        for (Object blockheader : blockheaders) {
+            JSONObject jsonObject = (JSONObject) blockheader;
+            BlockListDTO blockListDTO = new BlockListDTO();
+            blockListDTO.setBlockhash(jsonObject.getString("hash"));
+            blockListDTO.setHeight(jsonObject.getInteger("height"));
+            Long time = jsonObject.getLong("time");
+            blockListDTO.setTime(new Date(1000*time));
+            blockListDTO.setTxsize(jsonObject.getInteger("nTx"));
+            blockListDTO.setChainwork(jsonObject.getString("chainwork"));
+            //todo
+            blockListDTO.setSize(null);
+            blockListDTOS.add(blockListDTO);
+        }
+        return blockListDTOS;
     }
 
     @GetMapping("/getByBlockhash/{blockhash}")

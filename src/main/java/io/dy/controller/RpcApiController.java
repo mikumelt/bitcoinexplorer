@@ -22,7 +22,7 @@ public class RpcApiController {
     }
 
     @GetMapping("/getBlockchainInfo")
-    public String getBlockchainInfo() throws Throwable {
+    public  String getBlockchainInfo() throws Throwable {
         JSONObject blockchainInfo = bitcoinJsonRpcApi.getBlockchainInfo();
         return blockchainInfo.toJSONString();
     }

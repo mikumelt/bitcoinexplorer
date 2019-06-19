@@ -2,6 +2,8 @@ package io.dy.dao;
 
 import io.dy.po.Block;
 
+import java.util.List;
+
 public interface BlockMapper {
     int deleteByPrimaryKey(String blockhash);
 
@@ -14,4 +16,6 @@ public interface BlockMapper {
     int updateByPrimaryKeySelective(Block record);
 
     int updateByPrimaryKey(Block record);
+
+    List<Block> selectRecentBlocks();
 }

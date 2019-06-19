@@ -17,6 +17,21 @@
     from transaction_detail
     where tx_detail_id = #{txDetailId,jdbcType=BIGINT}
   </select>
+
+    <select id="getBanlance" resultType="java.lang.Double">
+        select SUM(amount) from `transaction_detail`
+        where address = #{address}
+    </select>
+
+  <select id="getDetailBytxid" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from transaction_detail
+    where txhash = #{txhash}
+  </select>
+
+
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from transaction_detail
     where tx_detail_id = #{txDetailId,jdbcType=BIGINT}

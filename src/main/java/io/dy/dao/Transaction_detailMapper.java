@@ -23,4 +23,8 @@ public interface Transaction_detailMapper {
 
     //根据交易哈希值获取交易的集合
     List<Transaction_detail> getDetailBytxid(@Param("txhash") String txhash);
+
+    List<Transaction_detail> selectByaddress(@Param("address") String address);
+
+
 }

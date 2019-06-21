@@ -76,7 +76,6 @@
             <artifactId>jsonrpc4j</artifactId>
             <version>1.5.3</version>
         </dependency>
-
     </dependencies>
 
     <dependencyManagement>

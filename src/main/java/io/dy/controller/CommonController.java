@@ -5,6 +5,8 @@ import io.dy.po.Transaction;
 import io.dy.po.Transaction_detail;
 import io.dy.service.CommonService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,6 +14,7 @@ import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/common")
+@CrossOrigin
 public class CommonController {
 
     @Autowired
@@ -60,6 +63,11 @@ public class CommonController {
         return  "输入的参数有误!";
     }
 
+    @MessageMapping("/pushRecentBlock")
+    @SendTo("/mytopic/pushRecentBlock")
+    public String pushRecentBlock(String message){
+        return message;
+    }
 
 
 

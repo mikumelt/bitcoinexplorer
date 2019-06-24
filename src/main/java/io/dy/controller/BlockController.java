@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/block")
-@CrossOrigin
+@CrossOrigin(allowCredentials = "true",allowedHeaders = "*")
 public class BlockController {
 
     @Autowired
@@ -74,6 +74,7 @@ public class BlockController {
         blockGetDTO.setSize(blockByHash.getInteger("size"));
         blockGetDTO.setTxsize(blockByHash.getInteger("nTx"));
         blockGetDTO.setWeight(blockByHash.getInteger("weight"));
+        blockGetDTO.setHeight(blockByHash.getInteger("height"));
         blockGetDTO.setVersion(blockByHash.getInteger("version"));
         blockGetDTO.setMerkleroot(blockByHash.getString("merkleroot"));
         Long time = blockByHash.getLong("time");
@@ -133,10 +134,48 @@ public class BlockController {
     }
 
     @GetMapping("/getByHeight/{height}")
-    public BlockGetDTO getByHeight(@PathVariable Integer height){
-       BlockGetDTO blockGetDTO = new BlockGetDTO();
+    public BlockGetDTO getByHeight(@PathVariable Integer height) throws Throwable {
 
-//        blockGetDTO.setBlockhash("0000000000000061aa4efcb9e905c9a41c6c7dc771a8c1a7ec1c45285e851330");
+        String blockhash = bitcoinJsonRpcApi.getBlockhashByHeight(height);
+        if(blockhash!=null) {
+            JSONObject blockByHash = bitcoinJsonRpcApi.getBlockByHash(blockhash);
+
+            BlockGetDTO blockGetDTO = new BlockGetDTO();
+            blockGetDTO.setBlockhash(blockByHash.getString("hash"));
+            blockGetDTO.setConfirmations(blockByHash.getInteger("confirmations"));
+            blockGetDTO.setSize(blockByHash.getInteger("size"));
+            blockGetDTO.setTxsize(blockByHash.getInteger("nTx"));
+            blockGetDTO.setWeight(blockByHash.getInteger("weight"));
+            blockGetDTO.setHeight(blockByHash.getInteger("height"));
+            blockGetDTO.setVersion(blockByHash.getInteger("version"));
+            blockGetDTO.setMerkleroot(blockByHash.getString("merkleroot"));
+            Long time = blockByHash.getLong("time");
+            blockGetDTO.setTime(new Date(1000 * time));
+            blockGetDTO.setReceivedTime(new Date(1000 * time));
+            blockGetDTO.setNonce(blockByHash.getInteger("nonce"));
+            blockGetDTO.setDifficulty(blockByHash.getInteger("difficulty"));
+            blockGetDTO.setChainwork(blockByHash.getString("chainwork"));
+            blockGetDTO.setPrevBlock(blockByHash.getString("previousblockhash"));
+            blockGetDTO.setNextBlock(blockByHash.getString("nextblockhash"));
+            //todo
+            blockGetDTO.setOutputTotal(null);
+            blockGetDTO.setFees(null);
+            blockGetDTO.setBlockReward(null);
+            blockGetDTO.setRelayedBy(null);
+
+            JSONArray tx = blockByHash.getJSONArray("tx");
+            List<String> list = new ArrayList<>();
+            for (Object o : tx) {
+                list.add((String) o);
+            }
+            blockGetDTO.setTransactionList(list);
+            return blockGetDTO;
+        }else{
+            return null;
+        }
+
+
+ //        blockGetDTO.setBlockhash("0000000000000061aa4efcb9e905c9a41c6c7dc771a8c1a7ec1c45285e851330");
 //        blockGetDTO.setConfirmations(1);
 //        blockGetDTO.setStrippedsize(18186);
 //        blockGetDTO.setSize(36317);
@@ -166,7 +205,7 @@ public class BlockController {
 //        list.add("563785a73a18d36a05cef8b855a6f58c91d28907de8c3c58cd818dbdecb51c01");
 //        list.add("6e74634e3a582c671ed50da17c92b5b183c5d6c078d4543dc669b8a59041c408");
 //        blockGetDTO.setTransactionList(list);
-        return blockGetDTO;
+
     }
 
 

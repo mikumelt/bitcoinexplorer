@@ -2,6 +2,7 @@ package io.dy.controller;
 
 import io.dy.dao.TransactionMapper;
 import io.dy.dao.Transaction_detailMapper;
+import io.dy.po.Transaction;
 import io.dy.po.Transaction_detail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,5 +25,12 @@ public class TransactionController {
         List<Transaction_detail> detailBytxid = transaction_detailMapper.getDetailBytxid(txhash);
         return detailBytxid;
     }
+
+    @GetMapping("/getRecentTransactions")
+    public List<Transaction> getRecentTransactions(){
+        List<Transaction> transactionList = transactionMapper.selectRecentTransactions();
+        return transactionList;
+    }
+
 
 }

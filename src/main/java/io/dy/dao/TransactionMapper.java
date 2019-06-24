@@ -2,6 +2,8 @@ package io.dy.dao;
 
 import io.dy.po.Transaction;
 
+import java.util.List;
+
 public interface TransactionMapper {
     int deleteByPrimaryKey(String txhash);
 
@@ -14,5 +16,7 @@ public interface TransactionMapper {
     int updateByPrimaryKeySelective(Transaction record);
 
     int updateByPrimaryKey(Transaction record);
+
+    List<Transaction> selectRecentTransactions();
 
 }

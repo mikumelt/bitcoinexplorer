@@ -1,6 +1,8 @@
 package io.dy.scheduler;
 
+import io.dy.dao.TransactionMapper;
 import io.dy.dto.BlockListDTO;
+import io.dy.po.Transaction;
 import io.dy.service.BlockService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +25,9 @@ public class TashScheduler {
     private BlockService blockService;
 
     @Autowired
+    private TransactionMapper transactionMapper;
+
+    @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
     @Scheduled(fixedRate = 3000)
@@ -31,5 +36,13 @@ public class TashScheduler {
         List<BlockListDTO> recentBlocks = blockService.getRecentBlocks();
         simpMessagingTemplate.convertAndSend("/mytopic/pushRecentBlock",recentBlocks);
     }
+
+    @Scheduled(fixedRate = 3000)
+    public  void  sendData1(){
+        logger.info("begin to send data");
+        List<Transaction> transactionList = transactionMapper.selectRecentTransactions();
+        simpMessagingTemplate.convertAndSend("/mytopic/pushTransactions",transactionList);
+    }
+
 
 }

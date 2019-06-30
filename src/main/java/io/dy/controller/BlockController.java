@@ -6,6 +6,7 @@ import io.dy.api.BitcoinJsonRpcApi;
 import io.dy.api.BitcoinRestApi;
 import io.dy.dto.BlockGetDTO;
 import io.dy.dto.BlockListDTO;
+import io.dy.po.Block;
 import io.dy.service.BlockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -207,6 +208,13 @@ public class BlockController {
 //        blockGetDTO.setTransactionList(list);
 
     }
+
+    @GetMapping("/blockview/{nowdate}/{day}")
+    public List<Block> blockview(@PathVariable String nowdate,@PathVariable int day){
+        List<Block> blockview = blockService.blockview(nowdate, day);
+        return blockview;
+    }
+
 
 
 

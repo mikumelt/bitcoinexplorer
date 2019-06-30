@@ -30,14 +30,16 @@ public class TashScheduler {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
-    @Scheduled(fixedRate = 3000)
+    //@Scheduled(fixedRate = 3000)
+    @Scheduled(cron = "${bitcoin.sync.cront}")
     public  void  sendData(){
         logger.info("begin to send data");
         List<BlockListDTO> recentBlocks = blockService.getRecentBlocks();
         simpMessagingTemplate.convertAndSend("/mytopic/pushRecentBlock",recentBlocks);
     }
 
-    @Scheduled(fixedRate = 3000)
+    //@Scheduled(fixedRate = 3000)
+    @Scheduled(cron = "${bitcoin.sync.cront}")
     public  void  sendData1(){
         logger.info("begin to send data");
         List<Transaction> transactionList = transactionMapper.selectRecentTransactions();

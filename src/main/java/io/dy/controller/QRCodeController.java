@@ -4,10 +4,8 @@ import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import net.glxn.qrgen.core.image.ImageType;
 import net.glxn.qrgen.javase.QRCode;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import sun.misc.BASE64Encoder;
 
 import java.io.ByteArrayOutputStream;
 
@@ -17,14 +15,17 @@ import java.io.ByteArrayOutputStream;
 public class QRCodeController {
     //todo 根据地址去生成二维码
 
-    @GetMapping(value = "/generate", produces = MediaType.IMAGE_PNG_VALUE)
-    public byte[] generate(String address){
+    @GetMapping(value = "/generate/{address}", produces = MediaType.IMAGE_PNG_VALUE)
+    public String generate(@PathVariable String address){
         ByteArrayOutputStream stream = QRCode.from(address)
                 .to(ImageType.PNG)
                 .withSize(256,256)
                 .withErrorCorrection(ErrorCorrectionLevel.H)
                 .stream();
         byte[] bytes = stream.toByteArray();
-        return bytes;
+        //转成BASE64编码
+        BASE64Encoder encoder = new BASE64Encoder();
+        String encode = encoder.encode(bytes);
+        return encode;
     }
 }

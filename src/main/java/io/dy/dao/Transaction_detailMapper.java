@@ -26,5 +26,4 @@ public interface Transaction_detailMapper {
 
     List<Transaction_detail> selectByaddress(@Param("address") String address);
 
-
 }

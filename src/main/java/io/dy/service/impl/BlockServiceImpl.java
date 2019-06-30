@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 @Service
 public class BlockServiceImpl implements BlockService {
@@ -34,5 +35,10 @@ public class BlockServiceImpl implements BlockService {
         return blockListDTOS;
     }
 
+    @Override
+    public List<Block> blockview(String nowdate, int day) {
+        List<Block> blockview = blockMapper.blockview(nowdate, day);
+        return blockview;
+    }
 
 }

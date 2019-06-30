@@ -1,8 +1,10 @@
 package io.dy.dao;
 
+import io.dy.dto.BlockListDTO;
 import io.dy.po.Block;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 public interface BlockMapper {
@@ -21,6 +23,8 @@ public interface BlockMapper {
     List<Block> selectRecentBlocks();
 
     Block selectByheight(@Param("height") String height);
+
+    List<Block> blockview(@Param("nowdate") String nowdate,@Param("day") int day);
 
 
 

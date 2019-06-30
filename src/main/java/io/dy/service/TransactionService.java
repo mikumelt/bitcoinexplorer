@@ -8,4 +8,6 @@ public interface TransactionService {
 
     //获取最近的交易
     List<Transaction> getRecentTransactions();
+
+    List<Transaction> transactionview(String nowdate,int day);
 }

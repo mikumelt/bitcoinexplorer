@@ -23,4 +23,10 @@ public class TransactionServiceImpl implements TransactionService {
         List<Transaction> transactionList = transactionMapper.selectRecentTransactions();
         return transactionList;
     }
+
+    @Override
+    public List<Transaction> transactionview(String nowdate, int day) {
+        List<Transaction> transactionview = transactionMapper.transactionview(nowdate, day);
+        return transactionview;
+    }
 }

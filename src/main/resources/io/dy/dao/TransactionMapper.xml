@@ -28,6 +28,19 @@
       limit 5
     </select>
 
+    <select id="transactionview" resultType="io.dy.po.Transaction">
+      select
+      <include refid="Base_Column_List" />
+      from `transaction`
+      where
+      TO_DAYS(time) = TO_DAYS(#{nowdate})
+      <if test="day!=null and day!=''">
+        + #{day}
+      </if>
+      order by time
+      limit 10
+    </select>
+
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from transaction

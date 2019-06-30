@@ -79,9 +79,13 @@ public class CommonController {
 
 
     @GetMapping("/ticker")
-    public String getRecentTicker(){
+    public Double getRecentTicker(){
+
         JSONObject recentTicker = blockChainRestApi.getRecentTicker();
-        return recentTicker.toJSONString();
+        //获取美元的
+        JSONObject usd = recentTicker.getJSONObject("USD");
+        Double last = usd.getDouble("last");
+        return last;
     }
 
     @GetMapping("/addresstohash/{address}")

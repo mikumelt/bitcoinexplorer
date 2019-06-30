@@ -32,5 +32,11 @@ public class TransactionController {
         return transactionList;
     }
 
+    @GetMapping("/transactionview/{nowdate}/{day}")
+    public List<Transaction> transactionview(@PathVariable String nowdate,@PathVariable  int day){
+        List<Transaction> transactionview = transactionMapper.transactionview(nowdate, day);
+        return transactionview;
+    }
+
 
 }
